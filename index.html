@@ -47,12 +47,15 @@
                         let durations = roundToNextValues( nbMonth / item.factor );
                         durations.forEach( function( duration ) {
                             let yearInDuration = Math.trunc( duration * item.factor / 12);
-                            let stringdate = ( input.getFullYear() + yearInDuration ) +
-                                '-' +
-                                ( input.getMonth() + 1 + ( duration * item.factor - ( yearInDuration * 12 ) ) ) +
-                                '-' +
-                                input.getDate();
-                            let date = new Date(stringdate);
+
+                            let yearDate = input.getFullYear() + yearInDuration ;
+                            let dayDate = input.getDate();
+                            let monthDate = input.getMonth() + 1 + ( duration * item.factor - ( yearInDuration * 12 ) );
+                            if(monthDate > 12) {
+                                monthDate = monthDate -12;
+                                yearDate +=1
+                            }
+                            let date = new Date(yearDate + '-' + monthDate + '-' + dayDate);
 
                             result.push({
                                 type:item.type,
