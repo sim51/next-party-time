@@ -3,13 +3,14 @@
         <title>Qu'est-ce que je peux fêter prochainement ?</title>
     </header>
     <body>
+        <!-- Welcome back dans les années 2000 :) -->
         <script type="text/javascript">
 
             function calculate() {
                 let result = [];
                 let  input = new Date(document.getElementById("date").value);
 
-                // time based event
+                // time based events
                 [
                     { factor: 1000,     type: 'Secondes' },
                     { factor: 60000,    type: 'Minutes' },
@@ -33,7 +34,7 @@
                     }
                 );
 
-                // date based event
+                // date based events
                 [
                     { factor: 1,  type: 'Mois' },
                     { factor: 3,  type: 'Trimestres' },
