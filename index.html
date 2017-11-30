@@ -1,5 +1,7 @@
-<html>
+<!doctype html>
+<html lang="fr">
     <header>
+        <meta charset="UTF-8">
         <title>Qu'est-ce que je peux fêter prochainement ?</title>
     </header>
     <body>
@@ -16,10 +18,10 @@
                 else {
                     // time based events
                     [
-                        { factor: 1000,     type: 'Secondes' },
-                        { factor: 60000,    type: 'Minutes' },
-                        { factor: 3600000,  type: 'Heures' },
-                        { factor: 86400000, type: 'Jours' }
+                        { factor: 1000,     type: 'Seconde(s)' },
+                        { factor: 60000,    type: 'Minute(s)' },
+                        { factor: 3600000,  type: 'Heure(s)' },
+                        { factor: 86400000, type: 'Jour(s)' }
                     ]
                     .forEach(
                         function( item ) {
@@ -41,9 +43,9 @@
                     // date based events
                     [
                         { factor: 1,  type: 'Mois' },
-                        { factor: 3,  type: 'Trimestres' },
-                        { factor: 6,  type: 'Semestres' },
-                        { factor: 12, type: 'Années' }
+                        { factor: 3,  type: 'Trimestre(s)' },
+                        { factor: 6,  type: 'Semestre(s)' },
+                        { factor: 12, type: 'Année(s)' }
                     ]
                     .forEach(
                         function( item ) {
@@ -90,7 +92,7 @@
                 return result;
             }
 
-            function getFirstDigit(number){
+            function getFirstDigit(value){
                 let number = Math.trunc(value);
                 let powa = Math.pow(10, number.toString().length -1);
                 return Math.trunc(number / powa);
@@ -124,7 +126,7 @@
                 html = "";
                 data.forEach( function ( item ) {
                     html    += "<p>";
-                    html    += "Le <strong>" + item.date.toLocaleDateString('fr-FR') + "</strong> vous allez fêter votre <strong>" + item.duration + " èmes " + item.type + "</strong>";
+                    html    += "Le <strong>" + item.date.toLocaleDateString('fr-FR') + "</strong> vous allez fêter votre <strong>" + item.duration + " ème(s) " + item.type + "</strong>";
                     html    += "</p>";
                 });
 
