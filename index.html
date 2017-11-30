@@ -10,63 +10,68 @@
                 let result = [];
                 let  input = new Date(document.getElementById("date").value);
 
-                // time based events
-                [
-                    { factor: 1000,     type: 'Secondes' },
-                    { factor: 60000,    type: 'Minutes' },
-                    { factor: 3600000,  type: 'Heures' },
-                    { factor: 86400000, type: 'Jours' }
-                ]
-                .forEach(
-                    function( item ) {
-                        let  now = new Date();
-                        let durations = roundToNextValues( ( now.getTime() - input.getTime() ) / item.factor );
-                        durations.forEach( function(duration) {
-                            let date = new Date(input.getTime() + duration * item.factor);
-                            result.push(
-                                {
-                                    type: item.type,
+                if( input == 'Invalid Date'  || input >= new Date()) {
+                    alert("Erreur d'intercae chaise/clavier : c'est pas une date de référence du passé ...");
+                }
+                else {
+                    // time based events
+                    [
+                        { factor: 1000,     type: 'Secondes' },
+                        { factor: 60000,    type: 'Minutes' },
+                        { factor: 3600000,  type: 'Heures' },
+                        { factor: 86400000, type: 'Jours' }
+                    ]
+                    .forEach(
+                        function( item ) {
+                            let  now = new Date();
+                            let durations = roundToNextValues( ( now.getTime() - input.getTime() ) / item.factor );
+                            durations.forEach( function(duration) {
+                                let date = new Date(input.getTime() + duration * item.factor);
+                                result.push(
+                                    {
+                                        type: item.type,
+                                        duration: duration,
+                                        date: date
+                                    }
+                                );
+                            });
+                        }
+                    );
+
+                    // date based events
+                    [
+                        { factor: 1,  type: 'Mois' },
+                        { factor: 3,  type: 'Trimestres' },
+                        { factor: 6,  type: 'Semestres' },
+                        { factor: 12, type: 'Années' }
+                    ]
+                    .forEach(
+                        function( item ) {
+                            let nbMonth = dateDifInMonth( input );
+                            let durations = roundToNextValues( nbMonth / item.factor );
+                            durations.forEach( function( duration ) {
+                                let yearInDuration = Math.trunc( duration * item.factor / 12);
+
+                                let yearDate = input.getFullYear() + yearInDuration ;
+                                let dayDate = input.getDate();
+                                let monthDate = input.getMonth() + 1 + ( duration * item.factor - ( yearInDuration * 12 ) );
+                                if(monthDate > 12) {
+                                    monthDate = monthDate -12;
+                                    yearDate +=1
+                                }
+                                let date = new Date(yearDate + '-' + monthDate + '-' + dayDate);
+
+                                result.push({
+                                    type:item.type,
                                     duration: duration,
                                     date: date
-                                }
-                            );
-                        });
-                    }
-                );
-
-                // date based events
-                [
-                    { factor: 1,  type: 'Mois' },
-                    { factor: 3,  type: 'Trimestres' },
-                    { factor: 6,  type: 'Semestres' },
-                    { factor: 12, type: 'Années' }
-                ]
-                .forEach(
-                    function( item ) {
-                        let nbMonth = dateDifInMonth( input );
-                        let durations = roundToNextValues( nbMonth / item.factor );
-                        durations.forEach( function( duration ) {
-                            let yearInDuration = Math.trunc( duration * item.factor / 12);
-
-                            let yearDate = input.getFullYear() + yearInDuration ;
-                            let dayDate = input.getDate();
-                            let monthDate = input.getMonth() + 1 + ( duration * item.factor - ( yearInDuration * 12 ) );
-                            if(monthDate > 12) {
-                                monthDate = monthDate -12;
-                                yearDate +=1
-                            }
-                            let date = new Date(yearDate + '-' + monthDate + '-' + dayDate);
-
-                            result.push({
-                                type:item.type,
-                                duration: duration,
-                                date: date
+                                });
                             });
-                        });
-                    }
-                );
+                        }
+                    );
 
-                displayResult( result );
+                    displayResult( result );
+                }
             }
 
             function roundToNextValues(value) {
