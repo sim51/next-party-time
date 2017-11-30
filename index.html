@@ -1,0 +1,142 @@
+<html>
+    <header>
+        <title>Qu'est-ce que je peux fêter prochainement ?</title>
+    </header>
+    <body>
+        <script type="text/javascript">
+
+            function calculate() {
+                let result = [];
+                let  input = new Date(document.getElementById("date").value);
+
+                // time based event
+                [
+                    { factor: 1000,     type: 'Secondes' },
+                    { factor: 60000,    type: 'Minutes' },
+                    { factor: 3600000,  type: 'Heures' },
+                    { factor: 86400000, type: 'Jours' }
+                ]
+                .forEach(
+                    function( item ) {
+                        let  now = new Date();
+                        let durations = roundToNextValues( ( now.getTime() - input.getTime() ) / item.factor );
+                        durations.forEach( function(duration) {
+                            let date = new Date(input.getTime() + duration * item.factor);
+                            result.push(
+                                {
+                                    type: item.type,
+                                    duration: duration,
+                                    date: date
+                                }
+                            );
+                        });
+                    }
+                );
+
+                // date based event
+                [
+                    { factor: 1,  type: 'Mois' },
+                    { factor: 3,  type: 'Trimestres' },
+                    { factor: 6,  type: 'Semestres' },
+                    { factor: 12, type: 'Années' }
+                ]
+                .forEach(
+                    function( item ) {
+                        let nbMonth = dateDifInMonth( input );
+                        let durations = roundToNextValues( nbMonth / item.factor );
+                        durations.forEach( function( duration ) {
+                            let yearInDuration = Math.trunc( duration * item.factor / 12);
+                            let stringdate = ( input.getFullYear() + yearInDuration ) +
+                                '-' +
+                                ( input.getMonth() + 1 + ( duration * item.factor - ( yearInDuration * 12 ) ) ) +
+                                '-' +
+                                input.getDate();
+                            let date = new Date(stringdate);
+
+                            result.push({
+                                type:item.type,
+                                duration: duration,
+                                date: date
+                            });
+                        });
+                    }
+                );
+
+                displayResult( result );
+            }
+
+            function roundToNextValues(value) {
+                result = [];
+                let number = Math.trunc(value);
+                let powa = Math.pow(10, number.toString().length -1);
+                let firstDigit = Math.trunc(number / powa);
+
+                result.push( ( firstDigit + 1 ) * powa );
+
+                let secondDigit = Math.trunc( ( number - ( firstDigit * powa) ) / ( powa /10 ) );
+                if (secondDigit < 5 ) {
+                    result.push( ( firstDigit * powa ) + ( 5 * powa / 10 ) );
+                }
+
+                return result;
+            }
+
+            function getFirstDigit(number){
+                let number = Math.trunc(value);
+                let powa = Math.pow(10, number.toString().length -1);
+                return Math.trunc(number / powa);
+            }
+
+            function dateDifInMonth(date) {
+                let result = 0;
+
+                let now = new Date();
+                result += ( now.getYear() - date.getYear() ) * 12;
+                if ( now.getMonth() > date.getMonth() ) {
+                    result += now.getMonth() - date.getMonth()
+                }
+                else {
+                    result += now.getMonth();
+                    result += (12 - date.getMonth());
+                }
+
+                return result;
+            }
+
+            function displayResult(data) {
+                data.sort( function ( a, b ) {
+                    if (a.date > b.date) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+
+                html = "";
+                data.forEach( function ( item ) {
+                    html    += "<p>";
+                    html    += "Le <strong>" + item.date.toLocaleDateString('fr-FR') + "</strong> vous allez fêter votre <strong>" + item.duration + " èmes " + item.type + "</strong>";
+                    html    += "</p>";
+                });
+
+                document.getElementById("result").innerHTML = html;
+            }
+
+        </script>
+        <h1>Qu'est-ce que je peux fêter prochainement ?</h1>
+        <div>
+            <h2>Donner une date de référence !</h2>
+
+            <p>naissance, mariage, baptème, embauche, ...</p>
+
+            <form onSubmit="calculate();return false;" >
+                <label for="day">Date :</label>
+                <input type="date" name="date" id="date" value=""/>
+                <input type="submit" value="Fait chauffer les serviettes !" />
+            </form>
+        </div>
+
+        <div id="result"></div>
+
+    </body>
+</html>
